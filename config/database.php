@@ -19,11 +19,4 @@
 		}
 	}
 
-	$database = new Database();
-	$connect = $database->koneksi();
-
-	$stmt = $connect->prepare("SELECT * FROM barang");
-	$stmt ->execute();
-	$barang = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-	print_r($barang);
+	

@@ -1,5 +1,9 @@
 <?php
 
+	include_once('config/database.php');
+	$database = new database();
+	$connect = $database->koneksi();
+
     $token = '1387784353:AAEPKgmFrNLQygEMEe44lcSat3JZVNTXSe0';
     
     $url = 'https://api.telegram.org/bot'.$token;
@@ -10,9 +14,17 @@
     
     $message = $telegram['message']['text'];
     
-    
+    $str = '';
     if($message == 'Halo') {
-        $reply =  'selamat datang di ZavetraStore';
-        
-        file_get_contents($url . '/sendmessage?chat_id=' . $chatId . '&text=' . $reply);
+    	$stmt = $connect->prepare("SELECT * FROM barang");
+		$stmt ->execute();
+		$barang = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($barang AS $row){
+			$str .= $row['produk'] . "\n";
+		}
     }
+
+
+    $reply = urlencode($str);
+    file_get_contents($url . '/sendmessage?chat_id=' . $chatId . '&text=' . $reply);
